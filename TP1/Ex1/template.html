@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados do Processador de Róis de Confessados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resultados do Processador de Róis de Confessados</h1>
+
+    <h2>Índice</h2>
+    <ul>
+        <li><a href="#freqAno">a) Frequência de Processos por Ano</a></li>
+        <li><a href="#freqNomes">b) Frequência de Nomes Próprios e Apelidos por Século</a></li>
+        <li><a href="#freqTios">c) Frequência de Processos com Recomendação de Tio</a></li>
+        <li><a href="#paisMultiplicados">d) Pais com mais de um Filho Confessado</a></li>
+        <li><a href="#primeiroReg">e) Primeiro Registo em JSON</a></li>
+    </ul>
+
+    <h2 id="freqAno">Frequência de Processos por Ano</h2>
+    {{ freqAno|safe }}
+
+    <h2 id="freqNomes">Frequência de Nomes Próprios e Apelidos por Século</h2>
+    {{ freqNomes|safe }}
+
+    <h2 id="freqTios">Frequência de Processos com Recomendação de Tio:</h2>
+    <p>{{ freqTios }}</p>
+
+    <h2 id="paisMultiplicados">Pais com mais de um Filho Confessado:</h2>
+    {{ paisMultiplicados|safe }}
+
+    <h2 id="primeiroReg">Primeiro Registo em JSON</h2>
+    <pre>{{ primeiroReg }}</pre>
+</body>
+</html>

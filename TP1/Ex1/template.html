@@ -33,6 +33,22 @@
             border: 1px solid #ccc;
             overflow: auto;
         }
+        /* Back to top button */
+        #topButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none; /* Initially hidden */
+        }
+        #topButton:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
@@ -61,5 +77,28 @@
 
     <h2 id="primeiroReg">Primeiro Registo em JSON</h2>
     <pre>{{ primeiroReg }}</pre>
+
+    <!-- Back to top button -->
+    <button id="topButton" onclick="scrollToTop()">Voltar ao Topo</button>
+
+    <script>
+        // Show the button when the user scrolls down 20px
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            const topButton = document.getElementById("topButton");
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                topButton.style.display = "block";
+            } else {
+                topButton.style.display = "none";
+            }
+        }
+
+        // Scroll to the top of the page when the button is clicked
+        function scrollToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
 </body>
 </html>

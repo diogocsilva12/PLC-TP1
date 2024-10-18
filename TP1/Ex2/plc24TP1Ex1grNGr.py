@@ -1,5 +1,10 @@
 import re
 import json
+from jinja2 import Environment, FileSystemLoader
+
+
+#TODO -> Comentar código
+
 
 def lerDados(caminhoArquivo):
     with open(caminhoArquivo, 'r') as arquivo:
@@ -12,8 +17,15 @@ def lerDados(caminhoArquivo):
     return cabecalho, dados
 
 def calcularIdadesExtremas(dados):
-    idades = [int(linha[5]) for linha in dados if re.match(r'^\d+$', linha[5])]
-    return min(idades), max(idades) if idades else (None, None)
+    idades = []
+    for linha in dados:
+        if re.match(r'^\d+$', linha[5]):
+            idades.append(int(linha[5]))
+    
+    if idades:
+        return min(idades), max(idades)
+    else:
+        return None, None
 
 def calcularDistribuicaoGenero(dados):
     contagemGenero = {'M': 0, 'F': 0}
@@ -38,8 +50,11 @@ def calcularDistribuicaoModalidade(dados):
 
     # Ordenar modalidades alfabeticamente dentro de cada ano
     for ano in distribuicaoModalidade:
-        distribuicaoModalidade[ano] = dict(sorted(distribuicaoModalidade[ano].items()))
-    
+        modalidadesOrdenadas = sorted(distribuicaoModalidade[ano].items())
+        distribuicaoModalidade[ano] = {}
+        for modalidade, contagem in modalidadesOrdenadas:
+            distribuicaoModalidade[ano][modalidade] = contagem
+
     return distribuicaoModalidade
 
 def calcularPercentagemAprovacao(dados):
@@ -56,11 +71,15 @@ def calcularPercentagemAprovacao(dados):
             else:
                 distribuicaoAprovacao[ano]['nao_aprovado'] += 1
             
-    # Calcular porcentagens
-    for ano, contagens in distribuicaoAprovacao.items():
-        total = contagens['aprovado'] + contagens['nao_aprovado']
-        contagens['percentagem_aprovado'] = (contagens['aprovado'] / total) * 100 if total > 0 else 0
-        contagens['percentagem_nao_aprovado'] = (contagens['nao_aprovado'] / total) * 100 if total > 0 else 0
+    # Calcular percentagens
+    for ano in distribuicaoAprovacao:
+        total = distribuicaoAprovacao[ano]['aprovado'] + distribuicaoAprovacao[ano]['nao_aprovado']
+        if total > 0:
+            distribuicaoAprovacao[ano]['percentagem_aprovado'] = (distribuicaoAprovacao[ano]['aprovado'] / total) * 100
+            distribuicaoAprovacao[ano]['percentagem_nao_aprovado'] = (distribuicaoAprovacao[ano]['nao_aprovado'] / total) * 100
+        else:
+            distribuicaoAprovacao[ano]['percentagem_aprovado'] = 0
+            distribuicaoAprovacao[ano]['percentagem_nao_aprovado'] = 0
 
     return distribuicaoAprovacao
 
@@ -82,29 +101,21 @@ def escreverJson(nomesIncorretos, caminhoArquivo):
         json.dump(nomesIncorretos, arquivoJson, indent=4)
 
 def gerarRelatorioHtml(idadesExtremas, distribuicaoGenero, distribuicaoModalidade, distribuicaoAprovacao):
+    # Carregar o template Jinja2
+    env = Environment(loader=FileSystemLoader('.'))
+    template = env.get_template('template.html')
+
+    # Renderizar o template com os dados
+    output = template.render(
+        idadesExtremas=idadesExtremas,
+        distribuicaoGenero=distribuicaoGenero,
+        distribuicaoModalidade=distribuicaoModalidade,
+        distribuicaoAprovacao=distribuicaoAprovacao
+    )
+
+    # Escrever o conteúdo renderizado no arquivo HTML
     with open('index.html', 'w') as f:
-        f.write('<html><body>')
-        f.write('<h1>Relatório de Exames Médicos Desportivos</h1>')
-        f.write(f'<h2>Idades Extremas: {idadesExtremas[0]} - {idadesExtremas[1]}</h2>')
-        
-        f.write('<h2>Distribuição por Gênero:</h2>')
-        for genero, contagem in distribuicaoGenero.items():
-            f.write(f'<p>{genero}: {contagem}</p>')
-
-        f.write('<h2>Distribuição por Modalidade por Ano:</h2>')
-        for ano, modalidades in distribuicaoModalidade.items():
-            f.write(f'<h3>Ano {ano}</h3><ul>')
-            for modalidade, contagem in modalidades.items():
-                f.write(f'<li>{modalidade}: {contagem}</li>')
-            f.write('</ul>')
-
-        f.write('<h2>Porcentagem de Aptos e Não Aptos por Ano:</h2>')
-        for ano, percentagens in distribuicaoAprovacao.items():
-            f.write(f'<h3>Ano {ano}</h3>')
-            f.write(f'<p>Aptos: {percentagens["percentagem_aprovado"]:.2f}%</p>')
-            f.write(f'<p>Não Aptos: {percentagens["percentagem_nao_aprovado"]:.2f}%</p>')
-
-        f.write('</body></html>')
+        f.write(output)
 
 def main():
     cabecalho, dados = lerDados('emd.csv')

@@ -2,19 +2,21 @@ import re
 import json
 import pandas as pd
 from collections import defaultdict
+from jinja2 import Environment, FileSystemLoader
+
 
 ##-------------------------------------------------------------------Parsing do ficheiro ----------------------------------------------------------------
 
 def lerProcessos(ficheiro):
     #cria uma lista de dicionários... Cada dicionário vai conter um processo com as informações do mesmo da forma key:value
     processos = []
-    #Expressõe Regex para identificar um processo:
+    #Expressões Regex para identificar um processo:
     
     
     '''
     A expressão começa com (\d+) -> procura uma sequência de 1 ou mais números referentes ao número do processo (Num_Proc), em cada intervalo de expressão regex está presente
     :: para separar as "categorias". A seguir procura uma data de nascimento representada em Regex por (\d{4}-\d{2}-\d{2}) pois é do tipo YYYY-MM-DD. De seguida utiliza
-    3 vezes (.+?) para procurar por 1 ou mais caracteres para as "categorias" "Confessado", "Pai" e "Mae". Por fim, como o ficherio pode ter ou não observações, utiliza
+    3 vezes (.+?) para procurar por 1 ou mais caracteres para as "categorias" "Confessado", "Pai" e "Mae". Por fim, como o ficheiro pode ter ou não observações, utiliza
     (.*) para procurar qualquer tipo de caracter.
     '''
     
@@ -26,7 +28,7 @@ def lerProcessos(ficheiro):
     with open(ficheiro, 'r', encoding='utf-8') as f:
         # Ignora a primeira linha. Não tem informações pertinentes para a análise dos dados.
         next(f)  
-        #O programa itera por todas as linhas do ficheiro, removendo todos os espaçoes em branco da mesma.
+        #O programa itera por todas as linhas do ficheiro, removendo todos os espaços em branco da mesma.
         '''
         Usa o método match() da biblioteca re para encontrar em cada linha uma expressão do tipo que foi definida anteriormente. Se fizer match com o pattern definido anteriormente
         utilizamos o método groups() para capturar num tuplo as informações de cada linha nas "categorias" pretendidas...
@@ -52,14 +54,14 @@ def lerProcessos(ficheiro):
     return processos
 
 
-##-------------------------------------------------------------------Funções Tratemento dos Dados  ----------------------------------------------------------------
+##-------------------------------------------------------------------Funções Tratamento dos Dados  ----------------------------------------------------------------
 ##----a) Calcular a frequência de Processos por ano (primeiro elemento da data);
 
 def freqProcessosPorAno(processos):
     anos = []
     #Itera sobre cada processo para extrair o ano
     for processo in processos:
-        #Utila regex para procurar um número de 4 digitos que representa um ano qualquer na chave "Data" do dicionário "processo" da lista "processos".
+        #Utiliza regex para procurar um número de 4 digitos que representa um ano qualquer na chave "Data" do dicionário "processo" da lista "processos".
         resultado = re.search(r'(\d{4})', processo['Data'])
         #se encontrar um match, o método group(1) retorna a 1ª correspondencia capturada pelo regex e adiciona esse ano à lista de anos.
         #Converte o match encontrada para int pois este está armazenado como string
@@ -178,12 +180,11 @@ def paisComMaisDeUmFilho(processos):
     # Retorna um DataFrame com os nomes dos pais
     return pd.DataFrame(pais_multiplicados, columns=["Pai"])
 
-def primeiroRegistroJson(processos):
+def primeiroRegistoJson(processos):
     if processos:
         return json.dumps(processos[0], ensure_ascii=False, indent=4)
     return None
 
-from jinja2 import Environment, FileSystemLoader
 
 def gerarHtml(freqAno, freqNomes, freqTios, paisMultiplicados, primeiroReg):
     # Configura o ambiente do Jinja2
@@ -211,12 +212,12 @@ def main():
     freqNomes = freqNomesPorSeculo(processos)
     freqTios = freqProcessosComRecomendacaoTio(processos)
     paisMultiplicados = paisComMaisDeUmFilho(processos)
-    primeiroReg = primeiroRegistroJson(processos)
+    primeiroReg = primeiroRegistoJson(processos)
 
     # Gerar a página HTML
     gerarHtml(freqAno, freqNomes, freqTios, paisMultiplicados, primeiroReg)
 
-    # Imprimir apenas o primeiro registro em JSON no console
+    # Imprimir apenas o primeiro registo em JSON no console
     print("Primeiro Registo em JSON:", primeiroReg)
 
 main()

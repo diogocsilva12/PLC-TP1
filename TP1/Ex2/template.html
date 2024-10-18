@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Exames Médicos Desportivos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
+            overflow: auto;
+        }
+        #topButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none;
+        }
+        #topButton:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Relatório de Exames Médicos Desportivos</h1>
+
+    <h2>Idades Extremas: {{ idadesExtremas[0] }} - {{ idadesExtremas[1] }}</h2>
+
+    <h2>Distribuição por Genero:</h2>
+    <ul>
+    {% for genero, contagem in distribuicaoGenero.items() %}
+        <li>{{ genero }}: {{ contagem }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Distribuição por Modalidade por Ano:</h2>
+    {% for ano, modalidades in distribuicaoModalidade.items() %}
+        <h3>Ano {{ ano }}</h3>
+        <ul>
+        {% for modalidade, contagem in modalidades.items() %}
+            <li>{{ modalidade }}: {{ contagem }}</li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+
+    <h2>Percentagem de Aptos e Não Aptos por Ano:</h2>
+    {% for ano, percentagens in distribuicaoAprovacao.items() %}
+        <h3>Ano {{ ano }}</h3>
+        <p>Aptos: {{ percentagens['percentagem_aprovado']|round(2) }}%</p>
+        <p>Não Aptos: {{ percentagens['percentagem_nao_aprovado']|round(2) }}%</p>
+    {% endfor %}
+
+    <button id="topButton" onclick="scrollToTop()">Voltar</button>
+
+    <script>
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            const topButton = document.getElementById("topButton");
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                topButton.style.display = "block";
+            } else {
+                topButton.style.display = "none";
+            }
+        }
+
+        function scrollToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+</body>
+</html>

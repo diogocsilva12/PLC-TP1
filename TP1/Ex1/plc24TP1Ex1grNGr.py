@@ -139,7 +139,7 @@ def freqProcessosComRecomendacaoTio(processos):
     # Itera sobre cada processo na lista de processos
     for processo in processos:
         # Verifica se "Tio" está presente nas observações (ignora case)
-        if re.search(r'tio', processo['Observacoes'], re.IGNORECASE):
+        if re.search(r'\btio\b', processo['Observacoes'], re.IGNORECASE):
             idProcessosTio.append(processo['NumProc'])
     # Retorna a contagem e os IDs dos processos
     return len(idProcessosTio)

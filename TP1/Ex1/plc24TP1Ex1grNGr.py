@@ -3,10 +3,10 @@ import pandas as pd
 
 ##-------------------------------------------------------------------Parsing do ficheiro ----------------------------------------------------------------
 def lerProcessos(ficheiro):
-    #cria uma lista de dicionários... Cada dicionário vai conter um processo com as informações do mesmo da forma key:value
+    # cria uma lista de dicionários... Cada dicionário vai conter um processo com as informações do mesmo da forma key:value
     processos = []
     
-    #Expressões Regex para identificar um processo:
+    # Expressões Regex para identificar um processo:
     
     '''
     A expressão começa com (\d+) -> procura uma sequência de 1 ou mais números referentes ao número do processo (Num_Proc), em cada intervalo de expressão regex está presente
@@ -16,34 +16,38 @@ def lerProcessos(ficheiro):
     '''
     padrao = r'(\d+)::(\d{4}-\d{2}-\d{2})::(.+?)::(.+?)::(.+?)::(.*)::'
     
-    #abre o ficheiro de entrada no mode de escrita, neste caso específico "processos.txt"
-    #Optamos por uma abordagem mais dinâmica, visando o funcionamento do programa com vários ficheiros deste género.
-    with open(ficheiro, 'r', encoding='utf-8') as f:
-        # Ignora a primeira linha. Não tem informações pertinentes para a análise dos dados.
-        next(f)
-        #O programa itera por todas as linhas do ficheiro, removendo todos os espaços em branco da mesma.
-        '''
-        Usa o método match() da biblioteca re para encontrar em cada linha uma expressão do tipo que foi definida anteriormente. Se fizer match com o pattern definido anteriormente
-        utilizamos o método groups() para capturar num tuplo as informações de cada linha nas "categorias" pretendidas...
-        Ex.: 575::1894-11-08::Aarao Pereira Silva::Antonio Pereira Silva::Francisca Campos Silva:::: -> ('575', '1894-11-08', 'Aarao Pereira Silva', 'Antonio Pereira Silva', 'Francisca Campos Silva', '')
-        Após este processo, adicionamos cada informação dos tuplos à categoria correspondente no dicionário na lista processos. 
-        No fim de iterar sobre todos os registos, devolvemos a lista de processos na forma de dicionários.
-        '''
-        for linha in f:
-            linha = linha.strip() # Ignora linhas vazias
-            if linha: 
-                resultado = re.match(padrao, linha)
-                if resultado:
-                    num_proc, data, confessado, pai, mae, observacoes = resultado.groups()
-                    processo = {
-                        'NumProc': num_proc,
-                        'Data': data,
-                        'Confessado': confessado,
-                        'Pai': pai,
-                        'Mae': mae,
-                        'Observacoes': observacoes
-                    }
-                    processos.append(processo)
+    # abre o ficheiro de entrada no modo de leitura, neste caso específico "processos.txt"
+    # Optamos por uma abordagem mais dinâmica, visando o funcionamento do programa com vários ficheiros deste género.
+    try:
+        with open(ficheiro, 'r', encoding='utf-8') as f:
+            # Ignora a primeira linha. Não tem informações pertinentes para a análise dos dados.
+            next(f)
+            # O programa itera por todas as linhas do ficheiro, removendo todos os espaços em branco da mesma.
+            '''
+            Usa o método match() da biblioteca re para encontrar em cada linha uma expressão do tipo que foi definida anteriormente. Se fizer match com o pattern definido anteriormente
+            utilizamos o método groups() para capturar num tuplo as informações de cada linha nas "categorias" pretendidas...
+            Ex.: 575::1894-11-08::Aarao Pereira Silva::Antonio Pereira Silva::Francisca Campos Silva:::: -> ('575', '1894-11-08', 'Aarao Pereira Silva', 'Antonio Pereira Silva', 'Francisca Campos Silva', '')
+            Após este processo, adicionamos cada informação dos tuplos à categoria correspondente no dicionário na lista processos. 
+            No fim de iterar sobre todos os registos, devolvemos a lista de processos na forma de dicionários.
+            '''
+            for linha in f:
+                linha = linha.strip()
+                if linha:
+                    match = re.match(padrao, linha)
+                    if match:
+                        processos.append({
+                            'NumProc': match.group(1),
+                            'Data': match.group(2),
+                            'Confessado': match.group(3),
+                            'Pai': match.group(4),
+                            'Mae': match.group(5),
+                            'Observacoes': match.group(6)
+                        })
+    except FileNotFoundError:
+        print(f"File {ficheiro} not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
     return processos
 
 ##-------------------------------------------------------------------Funções Tratamento dos Dados  ----------------------------------------------------------------
@@ -281,8 +285,16 @@ def gerarHtml(freqAno, freqNomes, freqTios, paisMultiplicados, recomendacoesFami
 
 
 def main():
-    nomeFicheiro = input("Insira o nome do ficheiro de entrada (ex: processos.txt): ")
-    processos = lerProcessos(nomeFicheiro)
+    while True:
+        nomeFicheiro = input("Insira o nome do ficheiro de entrada (ex: processos.txt): ")
+        try:
+            processos = lerProcessos(nomeFicheiro)
+            if not processos:
+                raise ValueError("No valid data found in the file.")
+            break
+        except (FileNotFoundError, ValueError) as e:
+            print(e)
+            print("Por favor, insira um ficheiro válido.")
 
     freqAno = freqProcessosPorAno(processos)
     freqNomes = freqNomesPorSeculo(processos)

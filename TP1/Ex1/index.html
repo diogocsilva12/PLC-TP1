@@ -1,70 +1,36 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados do Processador de Róis de Confessados</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-        }
-        h1, h2 {
-            color: #333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background-color: #fff;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        pre {
-            background-color: #f4f4f4;
-            padding: 10px;
-            border: 1px solid #ccc;
-            overflow: auto;
-        }
-        /* Back to top button */
-        #topButton {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            display: none; /* Initially hidden */
-        }
-        #topButton:hover {
-            background-color: #555;
-        }
-    </style>
-</head>
-<body>
-    <h1>Resultados do Processador de Róis de Confessados</h1>
 
-    <h2>Índice</h2>
-    <ul>
-        <li><a href="#freqAno">a) Frequência de Processos por Ano</a></li>
-        <li><a href="#freqNomes">b) Frequência de Nomes Próprios e Apelidos por Século</a></li>
-        <li><a href="#freqTios">c) Frequência de Processos com Recomendação de Tio</a></li>
-        <li><a href="#paisMultiplicados">d) Pais com mais de um Filho Confessado</a></li>
-        <li><a href="#primeiroReg">e) Primeiro Registo em JSON</a></li>
-    </ul>
+    <!DOCTYPE html>
+    <html lang="pt">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Resultados do Processador de Róis de Confessados</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+            h1, h2 { color: #333; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; background-color: #fff; }
+            th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+            th { background-color: #f2f2f2; }
+            pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ccc; overflow: auto; }
+            #topButton { position: fixed; bottom: 20px; right: 20px; background-color: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; display: none; }
+            #topButton:hover { background-color: #555; }
+        </style>
+    </head>
+    <body>
+        <h1>Resultados do Processador de Róis de Confessados</h1>
 
-    <h2 id="freqAno">Frequência de Processos por Ano</h2>
-    <table border="1" class="dataframe dataframe">
+        <h2>Índice</h2>
+        <ul>
+            <li><a href="#freqAno">a) Frequência de Processos por Ano</a></li>
+            <li><a href="#freqNomes">b) Frequência de Nomes Próprios e Apelidos por Século</a></li>
+            <li><a href="#freqTios">c) Frequência de Processos com Recomendação de Tio</a></li>
+            <li><a href="#paisMultiplicados">d) Pais com mais de um Filho Confessado</a></li>
+            <li><a href="#recomendacoesFamiliares">e) Recomendações de Familiares</a></li>
+            <li><a href="#primeiroReg">f) Primeiro Registo em JSON</a></li>
+        </ul>
+
+        <h2 id="freqAno">Frequência de Processos por Ano</h2>
+        <table border="1" class="dataframe dataframe">
   <thead>
     <tr style="text-align: right;">
       <th>Ano</th>
@@ -1147,8 +1113,8 @@
   </tbody>
 </table>
 
-    <h2 id="freqNomes">Frequência de Nomes Próprios e Apelidos por Século</h2>
-    <table border="1" class="dataframe dataframe">
+        <h2 id="freqNomes">Frequência de Nomes Próprios e Apelidos por Século</h2>
+        <table border="1" class="dataframe dataframe">
   <thead>
     <tr style="text-align: right;">
       <th>Século</th>
@@ -26925,11 +26891,11 @@
   </tbody>
 </table>
 
-    <h2 id="freqTios">Frequência de Processos com Recomendação de Tio:</h2>
-    <p>3331</p>
+        <h2 id="freqTios">Frequência de Processos com Recomendação de Tio:</h2>
+        <p>3331</p>
 
-    <h2 id="paisMultiplicados">Pais com mais de um Filho Confessado:</h2>
-    <table border="1" class="dataframe dataframe">
+        <h2 id="paisMultiplicados">Pais com mais de um Filho Confessado:</h2>
+        <table border="1" class="dataframe dataframe">
   <thead>
     <tr style="text-align: right;">
       <th>Pai</th>
@@ -45110,8 +45076,34 @@
   </tbody>
 </table>
 
-    <h2 id="primeiroReg">Primeiro Registo em JSON</h2>
-    <pre>{
+        <h2 id="recomendacoesFamiliares">Recomendações de Familiares e Tipos de Tios</h2>
+        <h3>Recomendações de Familiares</h3>
+        <table border="1" class="dataframe dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Parentesco</th>
+      <th>Frequência</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tio</td>
+      <td>3319</td>
+    </tr>
+    <tr>
+      <td>Primo</td>
+      <td>1011</td>
+    </tr>
+    <tr>
+      <td>Prima</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+        
+
+        <h2 id="primeiroReg">Primeiro Registo em JSON</h2>
+        <pre>{
     "NumProc": "575",
     "Data": "1894-11-08",
     "Confessado": "Aarao Pereira Silva",
@@ -45120,27 +45112,23 @@
     "Observacoes": ""
 }</pre>
 
-    <!-- Back to top button -->
-    <button id="topButton" onclick="scrollToTop()">Voltar ao Topo</button>
+        <button id="topButton" onclick="scrollToTop()">Voltar ao Topo</button>
 
-    <script>
-        // Show the button when the user scrolls down 20px
-        window.onscroll = function() {scrollFunction()};
-
-        function scrollFunction() {
-            const topButton = document.getElementById("topButton");
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                topButton.style.display = "block";
-            } else {
-                topButton.style.display = "none";
+        <script>
+            window.onscroll = function() {scrollFunction()};
+            function scrollFunction() {
+                const topButton = document.getElementById("topButton");
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    topButton.style.display = "block";
+                } else {
+                    topButton.style.display = "none";
+                }
             }
-        }
-
-        // Scroll to the top of the page when the button is clicked
-        function scrollToTop() {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
-        }
-    </script>
-</body>
-</html>
+            function scrollToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+        </script>
+    </body>
+    </html>
+    

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Doenças Cardíacas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
+            overflow: auto;
+        }
+        img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Relatório de Doenças Cardíacas</h1>
+
+    <h2>Idades Extremas: {{ idadesExtremas[0] }} - {{ idadesExtremas[1] }}</h2>
+
+    <h2>Distribuição por Género:</h2>
+    <ul>
+    {% for genero, contagem in distribuicaoGenero.items() %}
+        <li>{{ genero }}: {{ contagem|round(2) }}%</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Distribuição por Escalões Etários:</h2>
+    <ul>
+    {% for esc, contagem in distribuicaoIdade.items() %}
+        <li>{{ esc }}: {{ contagem }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Distribuição por Níveis de Colesterol:</h2>
+    <ul>
+    {% for nivel, contagem in distribuicaoColesterol.items() %}
+        <li>{{ nivel }}: {{ contagem }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Correlação com Tensão: {{ correlacaoTensao|round(2) }}</h2>
+    <h2>Correlação com Batimento: {{ correlacaoBatimento|round(2) }}</h2>
+
+    <h2>Gráficos de Distribuição:</h2>
+    <img src="distribuicoes.png" alt="Gráficos de Distribuição">
+
+</body>
+</html>

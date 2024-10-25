@@ -2,7 +2,7 @@ import re
 import pandas as pd
 
 ##-------------------------------------------------------------------Parsing do ficheiro ----------------------------------------------------------------
-def lerProcessos(ficheiro):
+def leProcessos(ficheiro):
     # cria uma lista de dicionários... Cada dicionário vai conter um processo com as informações do mesmo da forma key:value
     processos = []
     
@@ -159,14 +159,16 @@ def paisComMaisDeUmFilho(processos):
                 counterPais[pai] = 1
 
     # Filtra os pais que têm mais de um filho
-    pais_multiplicados = []
+    paisMaisUmFilho = []
     for pai, count in counterPais.items():
         if count > 1:
-            pais_multiplicados.append(pai)
+            paisMaisUmFilho.append(pai)
+            
+    numPaisMaisUmFilho = len(paisMaisUmFilho)
     # Ordena os nomes dos pais em ordem crescente
-    pais_multiplicados.sort()
+    paisMaisUmFilho.sort()
     # Retorna um DataFrame com os nomes dos pais
-    return pd.DataFrame(pais_multiplicados, columns=["Pai"])
+    return pd.DataFrame(paisMaisUmFilho, columns=["Pai"]), numPaisMaisUmFilho
 
 
 #Processamento opcional/adicional: calcula a frequência por parentesco de recomendação
@@ -194,7 +196,7 @@ def freqRecomendacoesFamiliares(processos):
     return pd.DataFrame(data, columns=['Parentesco', 'Frequência'])
 
 #Gera um ficheiro HTML
-def gerarHtml(freqAno, freqNomes, freqTios, paisMultiplicados, recomendacoesFamiliares, primeiroReg):
+def geraHtml(freqAno, freqNomes, freqTios, paisMultiplicados, recomendacoesFamiliares, primeiroReg, numPaisMultiplicados):
     primeiroReg_json = (
         "{\n"
         f'    "NumProc": "{primeiroReg["NumProc"]}",\n'
@@ -247,6 +249,7 @@ def gerarHtml(freqAno, freqNomes, freqTios, paisMultiplicados, recomendacoesFami
         <p>{freqTios}</p>
 
         <h2 id="paisMultiplicados">Pais com mais de um Filho Confessado:</h2>
+        <p>Total de pais com mais de um filho confessado: {numPaisMultiplicados}</p>
         {paisMultiplicados.to_html(index=False, classes='dataframe')}
 
         <h2 id="recomendacoesFamiliares">Recomendações de Familiares e Tipos de Tios</h2>
@@ -284,11 +287,12 @@ def gerarHtml(freqAno, freqNomes, freqTios, paisMultiplicados, recomendacoesFami
 
 
 
+
 def main():
     while True:
         nomeFicheiro = input("Insira o nome do ficheiro de entrada (ex: processos.txt): ")
         try:
-            processos = lerProcessos(nomeFicheiro)
+            processos = leProcessos(nomeFicheiro)
             if not processos:
                 raise ValueError("No valid data found in the file.")
             break
@@ -299,14 +303,15 @@ def main():
     freqAno = freqProcessosPorAno(processos)
     freqNomes = freqNomesPorSeculo(processos)
     freqTios = freqProcessosComRecomendacaoTio(processos)
-    paisMultiplicados = paisComMaisDeUmFilho(processos)
+    paisMultiplicados, numPaisMultiplicados = paisComMaisDeUmFilho(processos)
     recomendacoesFamiliares = freqRecomendacoesFamiliares(processos)
     
     #Primeiro registo como dicionário para o primeiro registo do json
     primeiroReg = processos[0] if processos else {}
 
-    gerarHtml(freqAno, freqNomes, freqTios, paisMultiplicados, recomendacoesFamiliares, primeiroReg)
+    geraHtml(freqAno, freqNomes, freqTios, paisMultiplicados, recomendacoesFamiliares, primeiroReg, numPaisMultiplicados)
     print("Operação realizada!")
 
 main()
+
 

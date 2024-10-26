@@ -44,9 +44,9 @@ def leProcessos(ficheiro):
                             'Observacoes': match.group(6)
                         })
     except FileNotFoundError:
-        print(f"File {ficheiro} not found.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Ficheiro {ficheiro} não encontrado.")
+    except Exception as error:
+        print(f"Erro: {error}")
 
     return processos
 
@@ -281,7 +281,7 @@ def geraHtml(freqAno, freqNomes, freqTios, paisMultiplicados, recomendacoesFamil
     </html>
     """
 
-    # Salva o conteúdo renderizado em um arquivo HTML
+    #Guarda o conteúdo renderizado em um arquivo HTML
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html_content)
 
@@ -294,10 +294,10 @@ def main():
         try:
             processos = leProcessos(nomeFicheiro)
             if not processos:
-                raise ValueError("No valid data found in the file.")
+                raise ValueError("Erro ao procurar dados no arquivo.")
             break
-        except (FileNotFoundError, ValueError) as e:
-            print(e)
+        except (FileNotFoundError, ValueError) as error:
+            print(error)
             print("Por favor, insira um ficheiro válido.")
 
     freqAno = freqProcessosPorAno(processos)
